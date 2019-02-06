@@ -1,0 +1,67 @@
+---
+title: "Teaching plan"
+author: "Rebecca Barter"
+date: "2/6/2019"
+output: html_document
+---
+ 
+ 
+Following Dean Attali's tutorial: https://deanattali.com/blog/building-shiny-apps-tutorial/
+
+- Remove comments at the top of the `app.R` file
+
+- Delete the contents of the `ui` and `server` functions
+
+- add `library(tidyverse)`
+
+- load in the data `bcl <- read_csv("bcl-data.csv", stringsAsFactors = FALSE)`
+
+- Explore `View(bcl)`
+
+- Show how the `fluidPage()` function works (it is literally a function that takes comma-separated arguments):
+`ui <- fluidPage("BC Liquor Store", "prices")`
+
+- We can use HTML wrappers for the arguments provided to the `fluidPage()` UI function to format the webpage
+
+```{r, eval = FALSE}
+ui <- fluidPage(
+  h1("My app"),
+  "BC", 
+  "Liquor", 
+  br(),
+  "Store",
+  strong("prices"))
+```
+
+- Create the basic webpage structure
+
+```{r eval = FALSE}
+ui <- fluidPage(
+  titlePanel("BC Liquor Store prices"),
+  sidebarLayout(
+    sidebarPanel("our inputs will go here"),
+    mainPanel("the results will go here")
+  )
+)
+```
+
+
+- Add some inputs to the UI. The first two arguments are always `inputID` (name of R object that will contain its current value) and `label` (display text title for the web page).
+
+```{r eval = FALSE}
+ui <- fluidPage(
+  titlePanel("BC Liquor Store prices"),
+  sidebarLayout(
+    sidebarPanel(
+      # slider input
+      sliderInput(inputId = "priceInput", 
+                  label = "Price", 
+                  min = 0, max = 100,
+                  value = c(25, 40), pre = "$")
+      ),
+    mainPanel("the results will go here")
+  )
+)
+
+```
+

@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1549491758542.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "202791E8",
+    "lastKnownWriteTime" : 1549493214,
+    "last_content_update" : 1549493214942,
+    "path" : "~/Google Drive/PhD/Teaching/shiny_DS421/Alcohol/app.R",
+    "project_path" : "app.R",
+    "properties" : {
+        "cursorPosition" : "16,6",
+        "scrollLine" : "0"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

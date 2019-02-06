@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1549491955800.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "2C8B5901",
+    "lastKnownWriteTime" : 1549493198,
+    "last_content_update" : 1549493199035,
+    "path" : "~/Google Drive/PhD/Teaching/shiny_DS421/teaching_plan.Rmd",
+    "project_path" : null,
+    "properties" : {
+        "cursorPosition" : "55,6",
+        "scrollLine" : "42",
+        "tempName" : "Untitled2"
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}
