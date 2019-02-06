@@ -8,15 +8,21 @@ output: html_document
  
 Following Dean Attali's tutorial: https://deanattali.com/blog/building-shiny-apps-tutorial/
 
+## Set up the empty shiny app
+
 - Remove comments at the top of the `app.R` file
 
 - Delete the contents of the `ui` and `server` functions
 
 - add `library(tidyverse)`
 
+## Load an explore data
+
 - load in the data `bcl <- read_csv("bcl-data.csv", stringsAsFactors = FALSE)`
 
 - Explore `View(bcl)`
+
+## Explore fluid page UI
 
 - Show how the `fluidPage()` function works (it is literally a function that takes comma-separated arguments):
 `ui <- fluidPage("BC Liquor Store", "prices")`
@@ -46,6 +52,8 @@ ui <- fluidPage(
 ```
 
 
+## Add inputs
+
 - Add some inputs to the UI. The first two arguments are always `inputID` (name of R object that will contain its current value) and `label` (display text title for the web page).
 
 ```{r eval = FALSE}
@@ -64,4 +72,171 @@ ui <- fluidPage(
 )
 
 ```
+
+
+- Add some `radioButtons` for type of alcohol and `selectInput` for country of origin.
+
+```{r eval = FALSE}
+ui <- fluidPage(
+  titlePanel("BC Liquor Store prices"),
+  sidebarLayout(
+    sidebarPanel(
+      sliderInput(inputId = "priceInput", 
+                  label = "Price", 
+                  min = 0, max = 100,
+                  value = c(25, 40), pre = "$"),
+      # radio buttons
+      radioButtons(inputId = "typeInput", 
+                   label = "Product type",
+                   choices = c("BEER", "REFRESHMENT", "SPIRITS", "WINE"),
+                   selected = "WINE"),
+      # select input
+      selectInput("countryInput", "Country",
+                  choices = c("CANADA", "FRANCE", "ITALY", 
+                              "UNITED STATES OF AMERICA", "AUSTRALIA"))
+    ),
+    mainPanel("the results will go here")
+  )
+)
+
+```
+
+## Set up outputs in UI
+
+- set up a placeholder for the main plot and data table
+
+```{r eval = FALSE}
+ui <- fluidPage(
+  titlePanel("BC Liquor Store prices"),
+  sidebarLayout(
+    sidebarPanel(
+      sliderInput(inputId = "priceInput", 
+                  label = "Price", 
+                  min = 0, max = 100,
+                  value = c(25, 40), pre = "$"),
+      radioButtons(inputId = "typeInput", 
+                   label = "Product type",
+                   choices = c("BEER", "REFRESHMENT", "SPIRITS", "WINE"),
+                   selected = "WINE"),
+      selectInput("countryInput", "Country",
+                  choices = c("CANADA", "FRANCE", "ITALY", 
+                              "UNITED STATES OF AMERICA", "AUSTRALIA"))
+    ),
+    mainPanel(
+      plotOutput("coolplot"),
+      br(), br(),
+      tableOutput("results")
+      )
+  )
+)
+```
+
+
+## Create outputs in server
+
+- The server function listens to changes to the inputs and creates outputs to show in the app
+
+- The server function has two (list) arguments: `input` and `output`
+
+  - `input` will contain the values of the different inputs at any given time.
+
+  - `output` will be where you save output objects (tables and plots) to display in the app
+
+There are three rules for building output in Shiny:
+
+1. save the output object into the output list
+
+1. built the object with a `render*()` function (`*` is the type of output)
+
+1. access the input values using the `input` list
+
+
+```{r eval = FALSE}
+server <- function(input, output) {
+  # plot output
+   output$coolplot <- renderPlot({
+     bcl %>%
+       filter(Country == input$countryInput,
+              Type %in% input$typeInput,
+              Price >= input$priceInput[1] & Price <= input$priceInput[2]) %>%
+     ggplot() +
+       geom_histogram(aes(x = Alcohol_Content)) +
+       theme_classic()
+   })
+}
+```
+
+since `coolplot` was defined as a `plotOutput`, we must create the plot inside the `renderPlot` function.
+
+
+- Now produce the table output, and talk about the `gt` package
+
+```{r eval = FALSE}
+server <- function(input, output) {
+   output$coolplot <- renderPlot({
+     bcl %>%
+       filter(Country == input$countryInput,
+              Type %in% input$typeInput,
+              Price >= input$priceInput[1] & Price <= input$priceInput[2]) %>%
+       ggplot() +
+         geom_histogram(aes(x = Alcohol_Content)) +
+         theme_classic()
+   })
+   # table output
+   output$results <- renderTable({
+     bcl %>%
+       filter(Country == input$countryInput,
+              Type %in% input$typeInput,
+              Price >= input$priceInput[1] & Price <= input$priceInput[2]) %>%
+       gt
+   })
+}
+```
+
+
+## Reactivity
+
+What does it mean to be reactive?
+
+```{r}
+x <- 5
+y <- x + 10
+x <- 10
+# not equal to 20!
+y
+```
+
+A reactive version of `y` would be equal to `20`.
+
+- In shiny all *inputs* are automatically reactive when used within a "reactive context" such as `renderPlot()` or `renderTable()`.
+
+- you can't use the inputs outside reactive contexts
+
+```{r eval = FALSE}
+server <- function(input, output) {
+  # print countryInput outside reactive context
+  print(input$countryInput)
+   output$coolplot <- renderPlot({
+     bcl %>%
+       filter(Country == input$countryInput,
+              Type %in% input$typeInput,
+              Price >= input$priceInput[1] & Price <= input$priceInput[2]) %>%
+       ggplot() +
+         geom_histogram(aes(x = Alcohol_Content)) +
+         theme_classic()
+   })
+   # table output
+   output$results <- renderTable({
+     bcl %>%
+       filter(Country == input$countryInput,
+              Type %in% input$typeInput,
+              Price >= input$priceInput[1] & Price <= input$priceInput[2]) %>%
+       gt
+   })
+}
+```
+
+
+
+- You can use reactivity outside of `render*()` functions using the `reactive()` and `observe()` functions.
 

@@ -7,13 +7,13 @@
     "folds" : "",
     "hash" : "0",
     "id" : "202791E8",
-    "lastKnownWriteTime" : 1549493214,
-    "last_content_update" : 1549493214942,
+    "lastKnownWriteTime" : 1549496913,
+    "last_content_update" : 1549496913749,
     "path" : "~/Google Drive/PhD/Teaching/shiny_DS421/Alcohol/app.R",
     "project_path" : "app.R",
     "properties" : {
-        "cursorPosition" : "16,6",
-        "scrollLine" : "0"
+        "cursorPosition" : "32,35",
+        "scrollLine" : "25"
     },
     "relative_order" : 1,
     "source_on_save" : false,
